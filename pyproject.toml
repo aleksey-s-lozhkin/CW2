@@ -43,13 +43,8 @@ warn_unused_configs = true
 show_error_codes = true
 exclude = "venv/|.venv/|build/|dist/|.mypy_cache/"
 
-# Для тестов
 [[tool.mypy.overrides]]
 module = "tests.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "test.*"
 ignore_errors = true
 
 [tool.black]
@@ -72,7 +67,6 @@ exclude = '''
 '''
 
 [tool.isort]
-# максимальная длина строки
 profile = "black"
 line_length = 119
 skip = [".venv", "venv"]
