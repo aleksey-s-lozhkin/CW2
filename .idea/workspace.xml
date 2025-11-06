@@ -4,23 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="721b11d9-e1f4-40fe-bbc8-7a50a08ee972" name="Changes" comment="added vacancy_storage.py">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/vacancy_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_api_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_vacancy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_vacancy_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_vacancy_storage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vacancy.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/vacancy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vacancy_storage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/vacancy_storage.py" afterDir="false" />
+    <list default="true" id="721b11d9-e1f4-40fe-bbc8-7a50a08ee972" name="Changes" comment="added tests, README.md">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762244082531</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="added tests, README.md">
+      <option name="closed" value="true" />
+      <created>1762444392761</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1762444392761</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -235,6 +228,7 @@
     <MESSAGE value="added api_client.py" />
     <MESSAGE value="added vacancy.py" />
     <MESSAGE value="added vacancy_storage.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="added vacancy_storage.py" />
+    <MESSAGE value="added tests, README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="added tests, README.md" />
   </component>
 </project>
