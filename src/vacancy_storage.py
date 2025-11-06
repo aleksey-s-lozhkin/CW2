@@ -1,26 +1,27 @@
-import os
 import json
-
+import os
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from src.vacancy import Vacancy
 
+
 class VacancyStorage(ABC):
-    """ Абстрактный класс для работы с файлом вакансий"""
+    """Абстрактный класс для работы с файлом вакансий"""
 
     @abstractmethod
     def add_vacancy(self, vacancy: Vacancy) -> None:
-        """ Метод для добавления вакансии в файл"""
+        """Метод для добавления вакансии в файл"""
         pass
 
     @abstractmethod
-    def get_vacancies(self, criteria: Dict[str, Any]) ->List[Vacancy]:
-        """ Метод для получения вакансий из файла по критериям"""
+    def get_vacancies(self, criteria: Dict[str, Any]) -> List[Vacancy]:
+        """Метод для получения вакансий из файла по критериям"""
         pass
 
     @abstractmethod
-    def del_vacancy(self, criteria: Dict[str, Any]) ->None:
-        """ Метод для удаления вакансии из файла по критериям"""
+    def del_vacancy(self, criteria: Dict[str, Any]) -> None:
+        """Метод для удаления вакансии из файла по критериям"""
         pass
 
     @abstractmethod
@@ -44,7 +45,7 @@ class VacancyStorage(ABC):
 class JSONVacancyStorage(VacancyStorage):
     """Класс для работы с вакансиями в JSON-файле"""
 
-    def __init__(self, filename: str = "vacancies.json"):
+    def __init__(self, filename: str = "data/vacancies.json"):
         self.filename = filename
         self._file_exists()
 
@@ -57,10 +58,10 @@ class JSONVacancyStorage(VacancyStorage):
 
     def _get_vacancies(self) -> List[Dict[str, Any]]:
         """Чтение вакансий из файла"""
-
         try:
             with open(self.filename, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                return data if isinstance(data, list) else []
         except (json.JSONDecodeError, FileNotFoundError):
             return []
 
@@ -83,7 +84,7 @@ class JSONVacancyStorage(VacancyStorage):
         vacancies_data.append(vacancy_dict)
         self._write_vacancies(vacancies_data)
 
-    def get_vacancies(self, criteria: Dict[str, Any] = None) -> List[Vacancy]:
+    def get_vacancies(self, criteria: Optional[Dict[str, Any]] = None) -> List[Vacancy]:
         """Получение вакансий по критериям из JSON-файла"""
 
         if criteria is None:
@@ -97,24 +98,33 @@ class JSONVacancyStorage(VacancyStorage):
 
             for key, value in criteria.items():
                 if key == 'salary_min':
-
                     salary = vacancy_dict.get('salary', {})
-                    salary_from = salary.get('from', 0)
-                    salary_to = salary.get('to', 0)
-                    actual_salary = max(salary_from, salary_to)
+                    salary_from = salary.get('from', 0) or 0
+                    salary_to = salary.get('to', 0) or 0
+
+                    if salary_from and salary_to:
+                        actual_salary = (salary_from + salary_to) // 2
+                    elif salary_from:
+                        actual_salary = salary_from
+                    elif salary_to:
+                        actual_salary = salary_to
+                    else:
+                        actual_salary = 0
+
                     if actual_salary < value:
                         matches = False
                         break
                 elif key == 'keyword':
-
                     keyword = value.lower()
-                    title = vacancy_dict.get('title', '').lower()
-                    description = vacancy_dict.get('description', '').lower()
-                    if keyword not in title and keyword not in description:
+
+                    title = str(vacancy_dict.get('title', '')).lower()
+                    description = str(vacancy_dict.get('description', '')).lower()
+                    responsibility = str(vacancy_dict.get('responsibility', '')).lower()
+
+                    if keyword not in title and keyword not in description and keyword not in responsibility:
                         matches = False
                         break
                 else:
-
                     if vacancy_dict.get(key) != value:
                         matches = False
                         break
