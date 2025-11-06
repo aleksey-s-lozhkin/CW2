@@ -30,6 +30,7 @@ class HeadHunterAPIClient(ApiClient):
 
     def _request(self, params: Optional[Dict[str, Any]] = None) -> requests.Response:
         """Метод подключения к API"""
+
         if params is None:
             params = {}
         response = requests.get(self.__base_url, params=params)
@@ -38,6 +39,7 @@ class HeadHunterAPIClient(ApiClient):
 
     def get_vacancies(self, keyword: str, area: int = 113, per_page: int = 30) -> List[Dict[str, Any]]:
         """Метод для получения вакансий"""
+
         params = {"text": keyword, "area": area, "per_page": per_page}
 
         try:
@@ -52,12 +54,14 @@ class HeadHunterAPIClient(ApiClient):
 
     def get_vacancies_as_objects(self, keyword: str, area: int = 113, per_page: int = 30) -> List[Vacancy]:
         """Метод для получения вакансий в виде объектов Vacancy"""
+
         raw_data = self.get_vacancies(keyword, area, per_page)
         return self._convert_vacancy(raw_data)
 
     @staticmethod
     def _convert_vacancy(raw_data: List[Dict[str, Any]]) -> List[Vacancy]:
         """Преобразование списка словарей в список объектов Vacancy"""
+
         vacancies = []
         for item in raw_data:
             title = item["name"]

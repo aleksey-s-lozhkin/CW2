@@ -47,6 +47,7 @@ class Vacancy:
 
     def get_salary_display(self) -> str:
         """Возвращает строковое представление зарплаты"""
+
         if not self.salary:
             return "Не указана"
 

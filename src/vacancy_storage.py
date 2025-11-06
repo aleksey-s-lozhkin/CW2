@@ -58,6 +58,7 @@ class JSONVacancyStorage(VacancyStorage):
 
     def _get_vacancies(self) -> List[Dict[str, Any]]:
         """Чтение вакансий из файла"""
+
         try:
             with open(self.filename, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -156,6 +157,7 @@ class JSONVacancyStorage(VacancyStorage):
 
     def clear_all(self) -> None:
         """Очистка всего JSON-файла"""
+
         self._write_vacancies([])
 
     def connect(self) -> None:

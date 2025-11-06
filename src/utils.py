@@ -5,6 +5,7 @@ from src.vacancy import Vacancy
 
 def get_salary_display(vacancy: Vacancy) -> str:
     """Форматирование отображения зарплаты"""
+
     if not vacancy.salary:
         return "Не указана"
 
@@ -28,6 +29,7 @@ def get_salary_display(vacancy: Vacancy) -> str:
 
 def display_vacancies(vacancies: List[Vacancy], title: str = "Вакансии"):
     """Отображение списка вакансий"""
+
     if not vacancies:
         print(f"{title} не найдены")
         return
