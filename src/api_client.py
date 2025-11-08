@@ -12,11 +12,6 @@ class ApiClient(ABC):
     """Абстрактный класс для работы с API сервиса с вакансиями"""
 
     @abstractmethod
-    def _request(self):
-        """Метод подключения к API сервиса с вакансиями"""
-        pass
-
-    @abstractmethod
     def get_vacancies(self, keyword: str) -> List[Dict]:
         """Метод для получения вакансий от сервиса с вакансиями"""
         pass
@@ -28,13 +23,28 @@ class HeadHunterAPIClient(ApiClient):
     def __init__(self, base_url: str = 'https://api.hh.ru/vacancies'):
         self.__base_url = base_url
 
-    def _request(self, params: Optional[Dict[str, Any]] = None) -> requests.Response:
-        """Метод подключения к API"""
+    def __request(self, params: Optional[Dict[str, Any]] = None) -> requests.Response:
+        """Приватный метод подключения к API"""
 
         if params is None:
             params = {}
+
         response = requests.get(self.__base_url, params=params)
-        response.raise_for_status()
+
+        # Проверка статус-кода
+        if response.status_code == 200:
+            return response
+        elif response.status_code == 400:
+            raise requests.exceptions.HTTPError("Неверные параметры запроса")
+        elif response.status_code == 403:
+            raise requests.exceptions.HTTPError("Доступ запрещен")
+        elif response.status_code == 404:
+            raise requests.exceptions.HTTPError("Ресурс не найден")
+        elif response.status_code == 500:
+            raise requests.exceptions.HTTPError("Ошибка сервера")
+        else:
+            response.raise_for_status()
+
         return response
 
     def get_vacancies(self, keyword: str, area: int = 113, per_page: int = 30) -> List[Dict[str, Any]]:
@@ -43,7 +53,7 @@ class HeadHunterAPIClient(ApiClient):
         params = {"text": keyword, "area": area, "per_page": per_page}
 
         try:
-            response = self._request(params)
+            response = self.__request(params)
             print('Запрос успешно выполнен')
             raw_data = response.json()
             items = raw_data.get("items", [])

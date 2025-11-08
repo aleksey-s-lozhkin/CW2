@@ -92,8 +92,8 @@ def test_get_top_n_by_salary(manager_with_mocks):
     # Проверяем результат
     assert len(top_2) == 2
     # Проверяем, что вакансии отсортированы по убыванию зарплаты
-    assert top_2[0]._get_comparison_salary() == 200000
-    assert top_2[1]._get_comparison_salary() == 150000
+    assert top_2[0]._Vacancy__get_comparison_salary() == 200000
+    assert top_2[1]._Vacancy__get_comparison_salary() == 150000
 
 
 def test_search_by_keyword(manager_with_mocks):

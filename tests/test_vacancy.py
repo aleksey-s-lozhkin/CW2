@@ -41,15 +41,15 @@ def test_comparison_salary():
     vacancy1 = Vacancy("Python Developer", "url1", {"from": 100000, "to": 150000}, "desc1", "resp1", "exp1")
     vacancy2 = Vacancy("Data Scientist", "url2", {"from": 120000}, "desc2", "resp2", "exp2")
 
-    assert vacancy1._get_comparison_salary() == 125000
-    assert vacancy2._get_comparison_salary() == 120000
+    assert vacancy1._Vacancy__get_comparison_salary() == 125000
+    assert vacancy2._Vacancy__get_comparison_salary() == 120000
     assert vacancy1 > vacancy2
     assert vacancy2 < vacancy1
 
 
 def test_no_salary(vacancy_no_salary):
     """Тест вакансии без зарплаты"""
-    assert vacancy_no_salary._get_comparison_salary() == 0
+    assert vacancy_no_salary._Vacancy__get_comparison_salary() == 0
 
 
 def test_to_dict(sample_vacancy):

@@ -32,6 +32,7 @@ def mock_response():
         ]
     }
     mock_response.raise_for_status.return_value = None
+    mock_response.status_code = 200
     return mock_response
 
 
@@ -45,7 +46,7 @@ def test_request_success(mock_get, api_client, mock_response):
     """Тест успешного запроса к API"""
     mock_get.return_value = mock_response
 
-    response = api_client._request({"text": "python"})
+    response = api_client._HeadHunterAPIClient__request({"text": "python"})
 
     mock_get.assert_called_once_with('https://api.hh.ru/vacancies', params={"text": "python"})
     assert response == mock_response
@@ -57,12 +58,12 @@ def test_request_without_params(mock_get, api_client):
     mock_response = Mock()
     mock_get.return_value = mock_response
 
-    api_client._request()
+    api_client._HeadHunterAPIClient__request()
 
     mock_get.assert_called_once_with('https://api.hh.ru/vacancies', params={})
 
 
-@patch('src.api_client.HeadHunterAPIClient._request')
+@patch('src.api_client.HeadHunterAPIClient._HeadHunterAPIClient__request')
 def test_get_vacancies_success(mock_request, api_client, mock_response):
     """Тест успешного получения вакансий"""
     mock_request.return_value = mock_response
@@ -74,7 +75,7 @@ def test_get_vacancies_success(mock_request, api_client, mock_response):
     assert result[0]["name"] == "Python Developer"
 
 
-@patch('src.api_client.HeadHunterAPIClient._request')
+@patch('src.api_client.HeadHunterAPIClient._HeadHunterAPIClient__request')
 def test_get_vacancies_http_error(mock_request, api_client):
     """Тест обработки HTTP ошибки"""
     # Используем конкретное исключение HTTPError
@@ -157,3 +158,17 @@ def test_save_vacancies_to_json_default_filename(
     assert result is True
     mock_makedirs.assert_called_once_with(os.path.dirname('data/raw_json.json'), exist_ok=True)
     mock_open.assert_called_once_with('data/raw_json.json', 'w', encoding='utf-8')
+
+
+@patch('src.api_client.requests.get')
+def test_request_http_error(mock_get, api_client):
+    """Тест обработки HTTP ошибок в запросе"""
+    mock_response = Mock()
+    mock_response.status_code = 404
+    mock_response.reason = "Not Found"
+    mock_response.url = "https://api.hh.ru/vacancies"
+    mock_response.text = "Error message"
+    mock_get.return_value = mock_response
+
+    with pytest.raises(requests.exceptions.HTTPError):
+        api_client._HeadHunterAPIClient__request({"text": "python"})

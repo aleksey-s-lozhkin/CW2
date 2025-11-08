@@ -1,5 +1,6 @@
 import os
 import tempfile
+import json
 
 import pytest
 
@@ -83,3 +84,82 @@ def test_search_by_salary(temp_storage):
     result = temp_storage.get_vacancies({"salary_min": 100000})
     assert len(result) == 1
     assert result[0].title == "Senior Dev"
+
+
+def test_invalid_json_file(temp_storage):
+    """Тест восстановления при поврежденном JSON-файле"""
+
+    with open(temp_storage._JSONVacancyStorage__filename, 'w') as f:
+        f.write("invalid json {")
+
+
+    vacancies = temp_storage.get_vacancies()
+    assert vacancies == []
+
+
+def test_vacancy_with_missing_fields(temp_storage):
+    """Тест обработки вакансий с отсутствующими полями"""
+
+    partial_vacancy = {
+        "title": "Incomplete Vacancy",
+        "url": "https://example.com"
+    }
+
+    with open(temp_storage._JSONVacancyStorage__filename, 'w') as f:
+        json.dump([partial_vacancy], f)
+
+    vacancies = temp_storage.get_vacancies()
+    assert len(vacancies) == 1
+
+
+def test_connection_methods(temp_storage):
+    """Тест заглушек методов подключения"""
+
+    assert temp_storage.is_connected() is True
+    temp_storage.connect()
+    temp_storage.disconnect()
+
+
+def test_empty_criteria(temp_storage, sample_vacancy):
+    """Тест пустого критерия поиска"""
+
+    temp_storage.add_vacancy(sample_vacancy)
+    result = temp_storage.get_vacancies({})
+    assert len(result) == 1
+
+
+def test_none_criteria(temp_storage, sample_vacancy):
+    """Тест передачи None как критерия"""
+
+    temp_storage.add_vacancy(sample_vacancy)
+    result = temp_storage.get_vacancies(None)
+    assert len(result) == 1
+
+
+def test_complex_workflow(temp_storage):
+    """Тест сценария работы"""
+    vacancies = [
+        Vacancy("Python Dev", "url1", {"from": 100000}, "Python developer", "Write code", "1-3 years"),
+        Vacancy("Java Dev", "url2", {"from": 120000}, "Java developer", "Write Java code", "3-5 years"),
+        Vacancy("Intern", "url3", {"from": 30000}, "Python intern", "Learn Python", "no experience"),
+    ]
+
+    for vacancy in vacancies:
+        temp_storage.add_vacancy(vacancy)
+
+    result = temp_storage.get_vacancies({
+        "salary_min": 50000,
+        "keyword": "Python"
+    })
+
+    assert len(result) == 1
+    assert result[0].title == "Python Dev"
+
+    temp_storage.del_vacancy({"title": "Java Dev"})
+
+    remaining = temp_storage.get_vacancies()
+    assert len(remaining) == 1
+
+    temp_storage.clear_all()
+    assert len(temp_storage.get_vacancies()) == 0
+

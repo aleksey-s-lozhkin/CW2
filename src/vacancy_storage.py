@@ -46,21 +46,21 @@ class JSONVacancyStorage(VacancyStorage):
     """Класс для работы с вакансиями в JSON-файле"""
 
     def __init__(self, filename: str = "data/vacancies.json"):
-        self.filename = filename
+        self.__filename = filename
         self._file_exists()
 
     def _file_exists(self) -> None:
         """Создает файл, если он не существует"""
 
-        if not os.path.exists(self.filename):
-            with open(self.filename, 'w', encoding='utf-8') as json_file:
+        if not os.path.exists(self.__filename):
+            with open(self.__filename, 'w', encoding='utf-8') as json_file:
                 json.dump([], json_file, ensure_ascii=False, indent=2)
 
     def _get_vacancies(self) -> List[Dict[str, Any]]:
         """Чтение вакансий из файла"""
 
         try:
-            with open(self.filename, 'r', encoding='utf-8') as f:
+            with open(self.__filename, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 return data if isinstance(data, list) else []
         except (json.JSONDecodeError, FileNotFoundError):
@@ -69,7 +69,7 @@ class JSONVacancyStorage(VacancyStorage):
     def _write_vacancies(self, vacancies: List[Dict[str, Any]]) -> None:
         """Запись вакансий в файл"""
 
-        with open(self.filename, 'w', encoding='utf-8') as f:
+        with open(self.__filename, 'w', encoding='utf-8') as f:
             json.dump(vacancies, f, ensure_ascii=False, indent=2)
 
     def add_vacancy(self, vacancy: Vacancy) -> None:
